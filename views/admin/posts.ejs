@@ -1,0 +1,131 @@
+<%- include("partials/header"); -%>
+<div class="container-fluid">
+	<form action="/do-post" onsubmit="return doPost(this);" method="POST">
+<div class="form-group">
+	<label for="">Title</label>
+	<input type="text" placeholder="Title" name="title" class="form-control">
+</div>
+
+<!-- Button trigger modal -->
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" type="button">
+	Upload An Image
+</button>
+
+
+<div class="form-group">
+	<label for="">Content</label>
+	<textarea name="content" class="form-control" id="" cols="30" rows="10"></textarea>
+</div>
+<input type="submit" class="btn btn-info" value="Post">
+	</form>
+	<table class="table">
+		<tr>
+			<th>Title</th>
+			<th>Image</th>
+			<th>Content</th>
+			<th>Action</th>
+		</tr>
+		<% posts.forEach(function (post){ %> 
+			<tr>
+				<td><%= post.title %></td>
+				<td>
+					<img src="<%= post.image %>" width="200px" alt="" srcset="">
+				</td>
+				<td><%= post.content %></td>
+				<td> 
+					<a href="/posts/edit/<%= post._id %>" class="btn btn-warning btn-sm">Edit</a>
+					<button type="button" class="btn btn-sm btn-danger" onclick="doDelete('<%= post._id %>','<%= post.image %>');">Delete</button>
+			    </td>
+				
+			</tr>
+		<% }) %> 
+
+	</table>
+</div>
+ <script>
+	 function doDelete(postId, image){
+		 if(confirm("Are you sure you wanna delete?")){
+		 $.ajax({
+			 url: "/do-delete",
+			 method: "POST",
+			 data: {
+				 "_id": postId,
+				 "image": image
+			 },
+			  success: function(response){
+				  var socket = io();
+				  socket.emit("delete_post", postId);
+					 alert(response);
+				 }
+		 });
+		 }
+	 }
+
+	 function doPost(form){
+		 var formData = {title: form.title.value, content: form.content.value, image: imagePath};
+		 $.ajax({
+		 url: "/do-post",
+		 method: "POST",
+		 data : formData,
+		 success: function(response) {
+			alert(response.text);
+			formData._id = response._id;
+			var socket = io();
+			socket.emit("new_post", formData);
+		 }
+		 });
+		 return false;
+	 }
+ </script>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+
+				<h4 class="modal-title" id="myModalLabel">
+					Upload An Image
+				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					×
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<form method="POST" enctype="multipart/form-data" id="form-upload">
+					<div class="form-group">
+						<input type="file" name="file" class="form-control">
+					</div>
+					<input type="submit" class="btn btn-success" value="Upload">
+				</form>
+			</div>
+
+			
+
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+
+</div><!-- /.modal -->
+<script>
+	var imagePath = "";
+	$("#form-upload").on("submit", function(e) {
+		e.preventDefault();
+		$.ajax({
+			url: "/do-upload-image",
+			method: "POST",
+			data: new FormData(this),
+			contentType: false,
+			cache:false,
+			processData: false,
+			success: function (response){
+				imagePath = response;
+				$("#myModal").modal("hide");
+			}
+		});
+	});
+</script>
+
+
+<%- include("partials/footer"); -%>
