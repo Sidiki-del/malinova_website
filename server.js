@@ -1,4 +1,4 @@
-const env = require("dotenv").config();
+const env = require("dotenv").config({path: './config/.env'});
 const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
