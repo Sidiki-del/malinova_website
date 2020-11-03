@@ -29,7 +29,7 @@ $secondary: #042e4f;
 
 
 html {
-	// overflow-x: hidden;
+	overflow-x: hidden;
 }
 body {
 	font-family: $font-primary;
@@ -595,7 +595,7 @@ h1, h2, h3, h4, h5,
 
 //SERVICES WRAP
 .services-wrap{
-	margin-bottom: 40px;
+	// margin-bottom: 40px;
 	.img{
 		width: 100%;
 		height: 200px;
@@ -627,7 +627,7 @@ h1, h2, h3, h4, h5,
 			z-index: 1;
 			margin-bottom: 20px;
 			background: $secondary;
-			// border: 1px solid rgba(0,0,0,.1);
+			border: 1px solid rgba(0,0,0,.1);
 			@include border-radius(50%);
 			span{
 				font-size:50px;
@@ -703,6 +703,14 @@ h1, h2, h3, h4, h5,
 }
 
 // Partners Section
+.partners{
+	padding-bottom: 30px;
+}
+.partners h2{
+	@include media-breakpoint-down(sm){
+		font-size: 34px !important;
+	}
+}
 
 .slick-slide{
     margin: 0px 20px;

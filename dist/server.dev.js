@@ -1,5 +1,9 @@
 "use strict";
 
+var env = require("dotenv").config({
+  path: './config/.env'
+});
+
 var express = require('express');
 
 var nodemailer = require('nodemailer');
@@ -17,6 +21,8 @@ var io = require("socket.io")(http);
 var formidable = require('formidable');
 
 var fs = require('fs');
+
+var colors = require('colors');
 
 var session = require('express-session');
 
@@ -42,18 +48,39 @@ MongoClient.connect("mongodb://localhost:27017", {
   useUnifiedTopology: true
 }, function (error, client) {
   var blog = client.db('blog');
-  console.log('DB Connected !! ');
-  app.get("/", function (req, res) {
-    blog.collection("settings").findOne({}, function (error, settings) {
-      var postLimit = parseInt(settings.post_limit);
-      blog.collection("posts").find().limit(postLimit).toArray(function (error, posts) {
-        posts = posts.reverse();
-        res.render("user/home", {
-          posts: posts,
-          "postLimit": postLimit
-        });
-      });
-    });
+  console.log('DB Connected !! '.red.bold); //   app.get("/", function (req, res) {
+  //       blog.collection("settings").findOne({}, function(error, settings){
+  //           var postLimit = parseInt(settings.post_limit);
+  //           blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
+  //         //   posts = posts.reverse();
+  //           res.render("user/home", {
+  //           posts: posts,
+  //           "postLimit": postLimit
+  //         });
+  //       });
+  //        });
+  //   });
+
+  app.get('/', function (req, res) {
+    res.render('user/index');
+  });
+  app.get('/gallery', function (req, res) {
+    res.render('user/gallery');
+  });
+  app.get('/blog-single', function (req, res) {
+    res.render('user/blog-single');
+  });
+  app.get('/blog', function (req, res) {
+    res.render('user/blog');
+  });
+  app.get('/contact', function (req, res) {
+    res.render('user/contact');
+  });
+  app.get('/about', function (req, res) {
+    res.render('user/about');
+  });
+  app.get('/services', function (req, res) {
+    res.render('user/services');
   });
   app.get('/get-posts/:start/:limit', function (req, res) {
     blog.collection("posts").find().sort({
@@ -67,25 +94,27 @@ MongoClient.connect("mongodb://localhost:27017", {
     res.redirect("/admin");
   });
   app.get('/admin/dashboard', function (req, res) {
-    if (req.session.admin) {
-      res.render('admin/dashboard');
-    } else {
-      res.redirect("/admin");
-    }
+    //   if(req.session.admin){
+    res.render('admin/dashboard'); //   } else {
+    //       res.redirect("/admin");
+    //   }
   });
   app.get("/admin/posts", function (req, res) {
-    if (req.session.admin) {
-      blog.collection("posts").find().toArray(function (error, posts) {
-        res.render("admin/posts", {
-          "posts": posts
-        });
+    //    if (req.session.admin) {
+    blog.collection("posts").find().toArray(function (error, posts) {
+      res.render("admin/posts", {
+        "posts": posts
       });
-    } else {
-      res.redirect("/admin");
-    }
+    }); //    } else {
+    //      res.redirect("/admin");
+    //    }
   });
   app.get('/admin/settings', function (req, res) {
-    res.render('admin/settings');
+    blog.collection("settings").findOne({}, function (error, settings) {
+      res.render('admin/settings', {
+        "post_limit": settings.post_limit
+      });
+    });
   });
   app.post('/admin/save_settings', function (req, res) {
     blog.collection("settings").update({}, {
@@ -119,6 +148,69 @@ MongoClient.connect("mongodb://localhost:27017", {
     }); //        }else{
     //       res.redirect("/admin");
     //   }
+  });
+  app.post("/contact", function (req, res) {
+    var output = "\n  <p>Vous avez un nouveau message</p>\n    <h3>Informations Du Contact</h3>\n    <ul>\n        <li>Pr\xE9nom : ".concat(req.body.name, "</li>\n        <li>Email : ").concat(req.body.email, "</li>\n        <li>Subject : ").concat(req.body.subject, "</li>\n    </ul>\n    <h3>Message:</h3>\n    <p>").concat(req.body.message, "</p>\n  ");
+    "use strict"; // async..await is not allowed in global scope, must use a wrapper
+
+
+    function main() {
+      var testAccount, transporter, info;
+      return regeneratorRuntime.async(function main$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return regeneratorRuntime.awrap(nodemailer.createTestAccount());
+
+            case 2:
+              testAccount = _context.sent;
+              // create reusable transporter object using the default SMTP transport
+              transporter = nodemailer.createTransport({
+                // host: "smtp.ethereal.email",
+                // port: 587,
+                // secure: false, // true for 465, false for other ports
+                service: "gmail",
+                auth: {
+                  user: process.env.GMAIL_EMAIL,
+                  // generated ethereal user
+                  pass: process.env.GMAIL_PASS // generated ethereal password
+
+                },
+                tls: {
+                  rejectUnauthorized: false
+                }
+              }); // send mail with defined transport object
+
+              _context.next = 6;
+              return regeneratorRuntime.awrap(transporter.sendMail({
+                from: req.body.email,
+                // sender address
+                to: process.env.GMAIL_EMAIL,
+                // list of receivers
+                subject: "Message Venant Du Site",
+                // Subject line
+                text: "Hello World",
+                // plain text body
+                html: output // html body
+
+              }));
+
+            case 6:
+              info = _context.sent;
+              console.log("Message sent: %s", info.messageId);
+              console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+              res.render('user/successmes');
+
+            case 10:
+            case "end":
+              return _context.stop();
+          }
+        }
+      });
+    }
+
+    main()["catch"](console.error);
   });
   app.post("/do-edit-post", function (req, res) {
     blog.collection("posts").updateOne({
@@ -202,8 +294,8 @@ MongoClient.connect("mongodb://localhost:27017", {
       var transporter = nodemailer.createTransport({
         "service": "gmail",
         "auth": {
-          "user": "sidikiissadiarra@gmail.com",
-          "pass": "123b@ligou"
+          "user": "process.env.GMAIL_EMAIL",
+          "pass": "process.env.GMAIL_PASS"
         }
       });
       var mailOptions = {
@@ -259,6 +351,6 @@ MongoClient.connect("mongodb://localhost:27017", {
     });
   });
   http.listen(3000, function () {
-    console.log('Server is running on port 3000');
+    console.log('Server is running on port 3000'.blue.bold);
   });
 });

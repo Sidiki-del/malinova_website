@@ -104,8 +104,10 @@ function initMap(){
                     var markers = [
                       {
                         coords: { lat: 12.623200, lng: -8.029607 },
-                        iconImage:
-                          "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+                        // iconImage:
+                          // "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+                          iconImage:
+                          "/static/user/images/malinova_logo_1.png",
                         content: "<h1>Malinova Technology</h1>",
                       },
                     //   {

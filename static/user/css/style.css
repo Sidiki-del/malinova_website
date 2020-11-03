@@ -9909,6 +9909,10 @@ h3 {
     border-color: #dee2e6;
   }
 }
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: "Roboto", Arial, sans-serif;
   background: #fff;
@@ -10467,9 +10471,6 @@ h1, h2, h3, h4, h5,
   background: #042e4f;
 }
 
-.services-wrap {
-  margin-bottom: 40px;
-}
 .services-wrap .img {
   width: 100%;
   height: 200px;
@@ -10502,6 +10503,7 @@ h1, h2, h3, h4, h5,
   z-index: 1;
   margin-bottom: 20px;
   background: #042e4f;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -10573,6 +10575,16 @@ h1, h2, h3, h4, h5,
   text-transform: uppercase;
   letter-spacing: 3px;
   font-weight: 600;
+}
+
+.partners {
+  padding-bottom: 30px;
+}
+
+@media (max-width: 767.98px) {
+  .partners h2 {
+    font-size: 34px !important;
+  }
 }
 
 .slick-slide {

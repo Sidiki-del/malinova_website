@@ -8,7 +8,7 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const formidable = require('formidable');
 const fs = require('fs');
-
+const colors = require('colors');
 
 const session = require('express-session');
 app.use(
@@ -40,7 +40,7 @@ MongoClient.connect(
   useUnifiedTopology: true
 }, function(error, client){
       var blog = client.db('blog');
-      console.log('DB Connected !! ');
+      console.log('DB Connected !! '.red.bold);
 
     //   app.get("/", function (req, res) {
     //       blog.collection("settings").findOne({}, function(error, settings){
@@ -79,7 +79,7 @@ MongoClient.connect(
       app.get('/about', function(req, res){
           res.render('user/about');
       });
-      app.get('/services', function(req, res){
+      app.get('/services', function(req, res){ 
           res.render('user/services');
       });
 
@@ -94,22 +94,22 @@ MongoClient.connect(
           res.redirect("/admin");
       });
        app.get('/admin/dashboard', function (req, res) {
-          if(req.session.admin){
+        //   if(req.session.admin){
           res.render('admin/dashboard');
-          } else {
-              res.redirect("/admin");
-          }
+        //   } else {
+        //       res.redirect("/admin");
+        //   }
       });
        app.get("/admin/posts", function (req, res) { 
-           if (req.session.admin) {
+        //    if (req.session.admin) {
                blog.collection("posts").find().toArray(function(error, posts){
 
                res.render("admin/posts", {"posts": posts});
                
-               })
-           } else {
-             res.redirect("/admin");
-           }
+               });
+        //    } else {
+        //      res.redirect("/admin");
+        //    }
        });
        app.get('/admin/settings', function(req, res){
            blog.collection("settings").findOne({}, function(error, settings){
@@ -182,7 +182,7 @@ MongoClient.connect(
             },
             tls: {
                 rejectUnauthorized: false
-            }
+            } 
         });
 
         // send mail with defined transport object
@@ -287,8 +287,8 @@ MongoClient.connect(
                var transporter = nodemailer.createTransport({
                    "service": "gmail",
                    "auth": {
-                       "user": "sidikiissadiarra@gmail.com",
-                       "pass": "123b@ligou"
+                       "user": "process.env.GMAIL_EMAIL",
+                       "pass": "process.env.GMAIL_PASS"
                    } 
                });
                var mailOptions = {
@@ -353,19 +353,8 @@ MongoClient.connect(
 
 
       http.listen(3000, function () {
-          console.log('Server is running on port 3000');
+          console.log('Server is running on port 3000'.blue.bold);
       });
-  
-
-
-
-
-
-
-
-
-
-
       });
      
 
