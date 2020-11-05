@@ -43,36 +43,53 @@ app.use(bodyParser.json());
 
 var MongoClient = require('mongodb').MongoClient;
 
-MongoClient.connect("mongodb://localhost:27017", {
+MongoClient.connect( //   "mongodb://localhost:27017",
+process.env.DATABASE, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }, function (error, client) {
   var blog = client.db('blog');
-  console.log('DB Connected !! '.red.bold); //   app.get("/", function (req, res) {
-  //       blog.collection("settings").findOne({}, function(error, settings){
-  //           var postLimit = parseInt(settings.post_limit);
-  //           blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
-  //         //   posts = posts.reverse();
-  //           res.render("user/home", {
-  //           posts: posts,
-  //           "postLimit": postLimit
-  //         });
-  //       });
-  //        });
+  console.log('DB Connected !! '.red.bold);
+  app.get("/", function (req, res) {
+    blog.collection("settings").findOne({}, function (error, settings) {
+      var postLimit = parseInt(settings.post_limit);
+      blog.collection("posts").find().sort({
+        "_id": -1
+      }).limit(postLimit).toArray(function (error, posts) {
+        //   posts = posts.reverse();
+        res.render("user/index", {
+          posts: posts,
+          "postLimit": postLimit
+        });
+      });
+    });
+  });
+  app.get("/blog", function (req, res) {
+    blog.collection("settings").findOne({}, function (error, settings) {
+      var postLimit = parseInt(settings.post_limit);
+      blog.collection("posts").find().sort({
+        "_id": -1
+      }).limit(postLimit).toArray(function (error, posts) {
+        posts = posts.reverse();
+        res.render("user/blog", {
+          posts: posts,
+          "postLimit": postLimit
+        });
+      });
+    });
+  }); // app.get('/', function(req, res){
+  //       res.render('user/index');
   //   });
 
-  app.get('/', function (req, res) {
-    res.render('user/index');
-  });
   app.get('/gallery', function (req, res) {
     res.render('user/gallery');
   });
   app.get('/blog-single', function (req, res) {
     res.render('user/blog-single');
-  });
-  app.get('/blog', function (req, res) {
-    res.render('user/blog');
-  });
+  }); //   app.get('/blog', function(req, res){
+  //       res.render('user/blog');
+  //   });
+
   app.get('/contact', function (req, res) {
     res.render('user/contact');
   });
@@ -94,20 +111,22 @@ MongoClient.connect("mongodb://localhost:27017", {
     res.redirect("/admin");
   });
   app.get('/admin/dashboard', function (req, res) {
-    //   if(req.session.admin){
-    res.render('admin/dashboard'); //   } else {
-    //       res.redirect("/admin");
-    //   }
+    if (req.session.admin) {
+      res.render('admin/dashboard');
+    } else {
+      res.redirect("/admin");
+    }
   });
   app.get("/admin/posts", function (req, res) {
-    //    if (req.session.admin) {
-    blog.collection("posts").find().toArray(function (error, posts) {
-      res.render("admin/posts", {
-        "posts": posts
+    if (req.session.admin) {
+      blog.collection("posts").find().toArray(function (error, posts) {
+        res.render("admin/posts", {
+          "posts": posts
+        });
       });
-    }); //    } else {
-    //      res.redirect("/admin");
-    //    }
+    } else {
+      res.redirect("/admin");
+    }
   });
   app.get('/admin/settings', function (req, res) {
     blog.collection("settings").findOne({}, function (error, settings) {
@@ -138,16 +157,17 @@ MongoClient.connect("mongodb://localhost:27017", {
     });
   });
   app.get("/posts/edit/:id", function (req, res) {
-    //   if(req.session.admin){
-    blog.collection("posts").findOne({
-      "_id": ObjectID(req.params.id)
-    }, function (error, post) {
-      res.render("admin/edit_post", {
-        "post": post
+    if (req.session.admin) {
+      blog.collection("posts").findOne({
+        "_id": ObjectID(req.params.id)
+      }, function (error, post) {
+        res.render("admin/edit_post", {
+          "post": post
+        });
       });
-    }); //        }else{
-    //       res.redirect("/admin");
-    //   }
+    } else {
+      res.redirect("/admin");
+    }
   });
   app.post("/contact", function (req, res) {
     var output = "\n  <p>Vous avez un nouveau message</p>\n    <h3>Informations Du Contact</h3>\n    <ul>\n        <li>Pr\xE9nom : ".concat(req.body.name, "</li>\n        <li>Email : ").concat(req.body.email, "</li>\n        <li>Subject : ").concat(req.body.subject, "</li>\n    </ul>\n    <h3>Message:</h3>\n    <p>").concat(req.body.message, "</p>\n  ");
@@ -266,16 +286,17 @@ MongoClient.connect("mongodb://localhost:27017", {
     });
   });
   app.post('/do-delete', function (req, res) {
-    //    if(req.session.admin){
-    fs.unlink(req.body.image.replace("/", ""), function (error) {
-      blog.collection("posts").deleteOne({
-        "_id": ObjectID(req.body._id)
-      }, function (error, document) {
-        res.send("Deleted");
+    if (req.session.admin) {
+      fs.unlink(req.body.image.replace("/", ""), function (error) {
+        blog.collection("posts").deleteOne({
+          "_id": ObjectID(req.body._id)
+        }, function (error, document) {
+          res.send("Deleted");
+        });
       });
-    }); //    }else{
-    //        res.redirect('/admin');
-    //    }
+    } else {
+      res.redirect('/admin');
+    }
   });
   app.post('/do-reply', function (req, res) {
     var reply_id = ObjectID();
