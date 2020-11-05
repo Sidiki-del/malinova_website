@@ -1,0 +1,182 @@
+
+	<section class="ftco-section bg-light">
+		<div class="container">
+			<div class="row justify-content-center mb-5 pb-3">
+				<div class="col-md-10 heading-section text-center ftco-animate">
+					<h2 class="mb-4" style="text-decoration: underline;">BLOG</h2>
+					<h3 style="font-weight: bold; ">NOS ARTICLES RECENTS</h3>
+				</div>
+			</div> 
+			<div id="posts">
+            <% posts.forEach(function(post){ %> 
+			<div class="row d-flex" id="post-<%= post._id %>">
+				<div class="col-lg-4 ftco-animate">
+					<div class="blog-entry">
+						<a  href="#" class="block-20" style="background-image: url('/static/user/images/image_1.jpg');">
+				<% if(post.image){ %>
+                <img class="block-20 img-fluid rounded" src="<%= post.image %>" alt="">
+ 
+              <% } else { %>
+                <img class="block-20 img-fluid rounded" src="http://placehold.it/750x300" alt="">
+                
+              <% } %>
+						</a>
+						<div class="text d-block">
+							<div class="meta">
+								<p>
+									<a href="#"><span class="fa fa-calendar mr-2"></span>Aug. 27, 2020</a>
+									<a href="#"><span class="fa fa-user mr-2"></span>Admin</a>
+									<a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> 3</a>
+								</p>
+							</div>
+							<h3 class="heading"><a href="#"><%= post.title  %></a></h3>
+							<p><%= post.content %></p>
+							<p><a href="admin/posts/<%= post._id %>" class="btn btn-secondary py-2 px-3">Read more</a></p>
+						</div>
+					</div>
+				</div>
+<!-- 
+				<div class="col-lg-4 ftco-animate">
+					<div class="blog-entry">
+						<a href="blog-single.html" class="block-20" style="background-image: url('/static/user/images/image_2.jpg');">
+						</a>
+						<div class="text d-block">
+							<div class="meta">
+								<p>
+									<a href="#"><span class="fa fa-calendar mr-2"></span>Aug. 27, 2020</a>
+									<a href="#"><span class="fa fa-user mr-2"></span>Admin</a>
+									<a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> 3</a>
+								</p>
+							</div>
+							<h3 class="heading"><a href="#">New Heavy Equipment To Launch</a></h3>
+							<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia...</p>
+							<p><a href="blog.html" class="btn btn-secondary py-2 px-3">Read more</a></p>
+						</div>
+					</div>
+				</div> -->
+				<!-- <div class="col-lg-4 ftco-animate">
+					<div class="blog-entry">
+						<a href="blog-single.html" class="block-20" style="background-image: url('/static/user/images/image_3.jpg');">
+						</a>
+						<div class="text d-block">
+							<div class="meta">
+								<p>
+									<a href="#"><span class="fa fa-calendar mr-2"></span>Aug. 27, 2020</a>
+									<a href="#"><span class="fa fa-user mr-2"></span>Admin</a>
+									<a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> 3</a>
+								</p>
+							</div>
+							<h3 class="heading"><a href="#">New Heavy Equipment To Launch</a></h3>
+							<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia...</p>
+							<p><a href="blog.html" class="btn btn-secondary py-2 px-3">Read more</a></p>
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	</section>
+
+  <script>
+
+    var limit = <%= postLimit %>;
+    var start = 0;
+
+    function getNext(){
+      start = start + limit;
+      $.ajax({
+        url: "/get-posts/"+ start + "/" + limit,
+        method: "GET",
+        success: function(response){
+          console.log(response);
+          renderPosts(response); 
+        }
+      });
+
+    }
+    
+    function getPrevious(){
+      start = start - limit;
+      $.ajax({
+        url: "/get-posts/"+ start + "/" + limit,
+        method: "GET",
+        success: function(response){
+          console.log(response);
+          renderPosts(response);
+        }
+      });
+
+    }
+
+
+    
+    function renderPosts(posts){
+      if(length.posts > 0){
+        var html = "";
+        for(var a = 0; a < posts.length; a++){
+          html += '<div class="row d-flex" id="post-' + posts[a]._id +'">';
+				html += '<div class="col-lg-4 ftco-animate">';
+					html += '<div class="blog-entry">';
+					
+			
+                html += '<img class="block-20 img-fluid rounded" src="' + posts[a].image +'" alt="">';
+ 
+             
+                html += '<img class="block-20 img-fluid rounded" src="http://placehold.it/750x300" alt=""></a>';
+               
+						 html += '<div class="text d-block">';
+							 html += '<div class="meta">'; 
+								 html += '<p>';
+									 html += '<a href="#"><span class="fa fa-calendar mr-2"></span>Aug. 27, 2020</a>';
+									 html += '<a href="#"><span class="fa fa-user mr-2"></span>Admin</a>';
+									 html += '<a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> 3</a>';
+								 html += '</p>';
+							 html += '</div>';
+							 html += '<h3 class="heading"><a href="#">';
+								 html += posts[a].title;
+								  html += '</a></h3>';
+							 html += '<p>';
+								 html +=  posts[a].content;
+								 html += '</p>';
+							 html += '<p><a href="admin/posts/'+ posts[a]._id +'" class="btn btn-secondary py-2 px-3">Read more</a></p>';
+						 html += '</div>';
+					 html += '</div>';
+				 html += '</div>';
+
+				
+			 html += '</div>';
+        }
+        $("#posts").html(html);
+      }
+    }
+
+    var socket = io();
+    socket.on("delete_post", function(replyId){
+      document.getElementById("post-" + replyId).deleteOne();
+    });
+    socket.on("new_post", function (formData) {
+          var html = "";
+            html += '<div class="card mb-4">';
+              html += '<div class="card-body">';
+                html += '<div class="row">';
+                  html += '<div class="col-lg-6">';
+                   html += ' <a href="#">';
+                     
+                      html += '<img class="img-fluid rounded" src="'+ formData.image +'" alt="">';
+
+                    html += '</a>'; 
+                  html += '</div>';
+                  html += '<div class="col-lg-6">';
+                    html += '<h2 class="card-title">formData.title</h2>';
+                    html += '<p class="card-text">formData.content</p>';
+                    html += '<a href="admin/posts/'+ formData._id +'" class="btn btn-primary">Read More &rarr;</a>';
+                  html += '</div>';
+                html += '</div>';
+              html += '</div>';
+              html += '<div class="card-footer text-muted">';
+                html += 'Posted on January 1, 2017 by';
+                html += '<a href="">Start Bootstrap</a>';
+              html += '</div>';
+            html += '</div>';
+             $("#posts").prepend(html);
+              });
+  </script>

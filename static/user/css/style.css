@@ -10471,13 +10471,21 @@ h1, h2, h3, h4, h5,
   background: #042e4f;
 }
 
+.services {
+  padding: 20px !important;
+  margin: 20px !important;
+}
+
+.services-wrap {
+  margin-bottom: 40px;
+}
 .services-wrap .img {
   width: 100%;
   height: 200px;
 }
 .services-wrap .text {
   background: rgba(0, 0, 0, 0.03);
-  padding: 20px;
+  padding: 20px !important;
 }
 .services-wrap .text h2 {
   font-weight: 500;
