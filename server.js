@@ -32,22 +32,37 @@ app.set("view engine", "ejs");
         })
       );
       app.use(bodyParser.json());
-
+ 
 var MongoClient = require('mongodb').MongoClient; 
 MongoClient.connect(
   "mongodb://localhost:27017",
+//    process.env.DATABASE,
   {useNewUrlParser: true,
   useUnifiedTopology: true
 }, function(error, client){
       var blog = client.db('blog');
       console.log('DB Connected !! '.red.bold);
 
-    //   app.get("/", function (req, res) {
+      app.get("/", function (req, res) {
+          blog.collection("settings").findOne({}, function(error, settings){
+              var postLimit = parseInt(settings.post_limit);
+              blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
+            //   posts = posts.reverse();
+              res.render("user/index", {
+              posts: posts,
+              "postLimit": postLimit
+            });
+          });
+           });
+          
+      });
+
+    //    app.get("/blog", function (req, res) {
     //       blog.collection("settings").findOne({}, function(error, settings){
     //           var postLimit = parseInt(settings.post_limit);
     //           blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
-    //         //   posts = posts.reverse();
-    //           res.render("user/home", {
+    //           posts = posts.reverse();
+    //           res.render("user/blog", {
     //           posts: posts,
     //           "postLimit": postLimit
     //         });
@@ -56,9 +71,20 @@ MongoClient.connect(
           
     //   });
 
-    app.get('/', function(req, res){
-          res.render('user/index');
+       app.get("/blog", function (req, res) {
+              blog.collection("posts").find().toArray(function(error, posts){
+              posts = posts.reverse();
+              res.render("user/blog", {
+              posts: posts
+            });
+          });
+          
       });
+
+
+    // app.get('/', function(req, res){
+    //       res.render('user/index');
+    //   });
 
       app.get('/gallery', function(req, res){
           res.render('user/gallery');
@@ -68,9 +94,9 @@ MongoClient.connect(
           res.render('user/blog-single');
       });
 
-      app.get('/blog', function(req, res){
-          res.render('user/blog');
-      });
+    //   app.get('/blog', function(req, res){
+    //       res.render('user/blog');
+    //   });
 
       app.get('/contact', function(req, res){
           res.render('user/contact');
@@ -94,22 +120,22 @@ MongoClient.connect(
           res.redirect("/admin");
       });
        app.get('/admin/dashboard', function (req, res) {
-        //   if(req.session.admin){
+          if(req.session.admin){
           res.render('admin/dashboard');
-        //   } else {
-        //       res.redirect("/admin");
-        //   }
+          } else {
+              res.redirect("/admin");
+          }
       });
        app.get("/admin/posts", function (req, res) { 
-        //    if (req.session.admin) {
+           if (req.session.admin) {
                blog.collection("posts").find().toArray(function(error, posts){
 
                res.render("admin/posts", {"posts": posts});
                
                });
-        //    } else {
-        //      res.redirect("/admin");
-        //    }
+           } else {
+             res.redirect("/admin");
+           }
        });
        app.get('/admin/settings', function(req, res){
            blog.collection("settings").findOne({}, function(error, settings){
@@ -138,15 +164,15 @@ MongoClient.connect(
        });
 
          app.get("/posts/edit/:id", function(req, res){
-        //   if(req.session.admin){
+          if(req.session.admin){
               blog.collection("posts").findOne({
                   "_id": ObjectID(req.params.id)
               }, function(error, post){
                   res.render("admin/edit_post", {"post":post});
               })
-        //        }else{
-        //       res.redirect("/admin");
-        //   }
+               }else{
+              res.redirect("/admin");
+          }
            
        });
        app.post("/contact", function (req, res) {
@@ -227,7 +253,7 @@ MongoClient.connect(
 
        app.get('/admin/posts/:id', function(req, res){
            blog.collection('posts').findOne({"_id": ObjectID(req.params.id)}, function(error, post){
-               res.render('user/post', {post: post});
+               res.render('user/blog-single', {post: post});
            });
        });
 
@@ -254,7 +280,7 @@ MongoClient.connect(
        });
 
        app.post('/do-delete', function(req, res){
-        //    if(req.session.admin){
+           if(req.session.admin){
                fs.unlink(req.body.image.replace("/", ""), function(error){
                    blog.collection("posts").deleteOne({
                        "_id": ObjectID(req.body._id)
@@ -263,9 +289,9 @@ MongoClient.connect(
                    });
                });
 
-        //    }else{
-        //        res.redirect('/admin');
-        //    }
+           }else{
+               res.redirect('/admin');
+           }
 
        });
 
@@ -356,7 +382,7 @@ MongoClient.connect(
           console.log('Server is running on port 3000'.blue.bold);
       });
       });
-     
+
 
 
 

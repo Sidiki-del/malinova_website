@@ -115,7 +115,7 @@
 					<div class="py-lg-5">
 						<div class="row justify-content-center pb-5">
 							<div class="heading-section ftco-animate">
-								<h2 class="mb-3" style="text-decoration: underline;">POURQUOI NOUS CHOISIR ?</h2>
+								<h2 class="mb-3" style="text-decoration: underline;">POURQUOI NOUS?</h2>
 							</div>
 						</div>
 						<div class="row">
@@ -374,7 +374,7 @@
 									<span class="position">Guests</span>
 								</div>
 							</div>
-						</div>
+						</div> 
 						<div class="item">
 							<div class="testimony-wrap py-4 pb-5 d-flex justify-content-between">
 								<div class="user-img" style="background-image: url(/static/user/images/person_2.jpg)">
@@ -436,5 +436,57 @@
 			</div>
 		</div>
 	</section> 
+	
+	
+
+	<section class="ftco-section bg-light py-5">
+	
+		<div class="container">
+			<div class="row justify-content-center mb-5 ">
+				<div class="col-md-10 heading-section text-center ftco-animate">
+					<!-- <span class="subheading">Our Blog</span> -->
+					<h2 class="mb-4 text-uppercase" style="text-decoration: underline;">Nos Récents Articles</h2>
+				</div>
+			</div>
+			
+			<div id="posts"> 
+
+			<div class="row d-flex">
+            <% posts.forEach(function(post){ %> 
+
+				<div class="col-lg-4 ftco-animate" id="post-<%= post._id %>" >
+					<div class="blog-entry card" >
+						<a href="#" class="block-20">
+
+							<% if(post.image){ %>
+                            <img class="img-fluid " src="<%= post.image %>" alt="">
+                            <% } else { %>
+                            <img class="img-fluid " src="http://placehold.it/750x300" alt="">             
+                            <% } %>
+						</a>
+						<div class="text d-block">
+							<div class="meta">
+								<p>
+									<a href="#"><span class="fa fa-calendar mr-2"></span>Aug. 27, 2020</a>
+									<a href="#"><span class="fa fa-user mr-2"></span>Admin</a>
+									<a href="#" class="meta-chat"><span class="fa fa-comment mr-2"></span> 3</a>
+								</p>
+							</div>
+							<h3 class="heading"><a href="#"><%= post.title %></a></h3>
+							<p id="new_para"><%=post.content.substring(0, 15) + " ..."%></p>   
+							
+							<p><a href="admin/posts/<%= post._id %>" class="btn btn-secondary py-2 px-3">LIRE PLUS</a></p>
+							<!-- id="new_para" style="position: relative; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; padding: 5px;" -->
+						</div>
+					</div>
+				</div> 
+				<%  }); %>
+				 
+			</div>
+		</div>
+		</div>
+	</section>
+
+	
 
 		<%- include("partials/footer"); -%>
