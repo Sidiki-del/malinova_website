@@ -706,13 +706,21 @@ h1, h2, h3, h4, h5,
 	}
 }
 
+// Extra Style Added To Pourquoi Nous Section
+
+#why h2{
+	@include media-breakpoint-down(sm){
+		font-size: 26px !important;
+	}
+}
+
 // Partners Section
 .partners{
 	padding-bottom: 30px;
 }
 .partners h2{
 	@include media-breakpoint-down(sm){
-		font-size: 34px !important;
+		font-size: 24px !important;
 	}
 }
 
@@ -2044,3 +2052,19 @@ textarea.form-control {
     stroke-dashoffset: -136px;
   }
 }
+
+// #new_para{
+// // 	overflow: hidden;
+// //    text-overflow: ellipsis;
+// //    display: -webkit-box;
+// //    -webkit-line-clamp: 1; /* number of lines to show */
+// //    -webkit-box-orient: vertical;
+// //    padding: 20px;
+// // position: relative;
+// text-overflow: ellipsis; /* will make [...] at the end */
+//     width: 370px; /* change to your preferences */
+//     white-space: nowrap; /* paragraph to one line */
+// 	overflow:hidden; /* older browsers */
+// 	//  max-width: calc(30em * 0.5);
+
+// }

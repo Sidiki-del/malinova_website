@@ -32,11 +32,11 @@ app.set("view engine", "ejs");
         })
       );
       app.use(bodyParser.json());
-
+ 
 var MongoClient = require('mongodb').MongoClient; 
 MongoClient.connect(
-//   "mongodb://localhost:27017",
-   process.env.DATABASE,
+  "mongodb://localhost:27017",
+//    process.env.DATABASE,
   {useNewUrlParser: true,
   useUnifiedTopology: true
 }, function(error, client){
@@ -57,19 +57,30 @@ MongoClient.connect(
           
       });
 
+    //    app.get("/blog", function (req, res) {
+    //       blog.collection("settings").findOne({}, function(error, settings){
+    //           var postLimit = parseInt(settings.post_limit);
+    //           blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
+    //           posts = posts.reverse();
+    //           res.render("user/blog", {
+    //           posts: posts,
+    //           "postLimit": postLimit
+    //         });
+    //       });
+    //        });
+          
+    //   });
+
        app.get("/blog", function (req, res) {
-          blog.collection("settings").findOne({}, function(error, settings){
-              var postLimit = parseInt(settings.post_limit);
-              blog.collection("posts").find().sort({"_id": -1}).limit(postLimit).toArray(function(error, posts){
+              blog.collection("posts").find().toArray(function(error, posts){
               posts = posts.reverse();
               res.render("user/blog", {
-              posts: posts,
-              "postLimit": postLimit
+              posts: posts
             });
           });
-           });
           
       });
+
 
     // app.get('/', function(req, res){
     //       res.render('user/index');
@@ -242,7 +253,7 @@ MongoClient.connect(
 
        app.get('/admin/posts/:id', function(req, res){
            blog.collection('posts').findOne({"_id": ObjectID(req.params.id)}, function(error, post){
-               res.render('user/post', {post: post});
+               res.render('user/blog-single', {post: post});
            });
        });
 

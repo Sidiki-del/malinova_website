@@ -3,7 +3,7 @@
 	<form action="/do-post" onsubmit="return doPost(this);" method="POST">
 <div class="form-group">
 	<label for="">Title</label>
-	<input type="text" placeholder="Title" name="title" class="form-control">
+	<input type="text" placeholder="Title" name="title" class="form-control lead">
 </div>
 
 <!-- Button trigger modal -->
@@ -13,12 +13,13 @@
 
 
 <div class="form-group">
-	<label for="">Content</label>
-	<textarea name="content" class="form-control" id="" cols="30" rows="10"></textarea>
+	<label for="">Content</label> 
+	<textarea name="content"  class="form-control" cols="5" rows="5"></textarea>
 </div>
+<!-- id="summernote" -->
 <input type="submit" class="btn btn-info" value="Post">
 	</form>
-	<table class="table">
+	<table class="table ">
 		<tr>
 			<th>Title</th>
 			<th>Image</th>
@@ -31,7 +32,7 @@
 				<td>
 					<img src="<%= post.image %>" width="200px" alt="" srcset="">
 				</td>
-				<td><%= post.content %></td>
+				<td style="max-width: 200px;"><%= post.content %></td>
 				<td> 
 					<a href="/posts/edit/<%= post._id %>" class="btn btn-warning btn-sm">Edit</a>
 					<button type="button" class="btn btn-sm btn-danger" onclick="doDelete('<%= post._id %>','<%= post.image %>');">Delete</button>
@@ -42,6 +43,12 @@
 
 	</table>
 </div>
+
+
+<script>
+	$('#summernote').summernote();
+</script>
+
  <script>
 	 function doDelete(postId, image){
 		 if(confirm("Are you sure you wanna delete?")){

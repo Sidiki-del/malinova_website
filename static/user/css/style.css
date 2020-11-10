@@ -10585,13 +10585,19 @@ h1, h2, h3, h4, h5,
   font-weight: 600;
 }
 
+@media (max-width: 767.98px) {
+  #why h2 {
+    font-size: 26px !important;
+  }
+}
+
 .partners {
   padding-bottom: 30px;
 }
 
 @media (max-width: 767.98px) {
   .partners h2 {
-    font-size: 34px !important;
+    font-size: 24px !important;
   }
 }
 

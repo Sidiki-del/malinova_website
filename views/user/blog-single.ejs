@@ -2,30 +2,37 @@
 
 <!-- END nav -->
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('/static/user/images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('/static/user/images/malinova_27.jpg');" data-stellar-background-ratio="0.5">
   <div class="overlay"></div>
   <div class="container">
     <div class="row no-gutters slider-text align-items-end justify-content-start">
       <div class="col-md-9 ftco-animate pb-5">
-       <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="fa fa-chevron-right"></i></a></span> <span class="mr-2"><a href="blog.html">Blog <i class="fa fa-chevron-right"></i></a></span> <span>Blog Single <i class="fa fa-chevron-right"></i></span></p>
+       <p class="breadcrumbs"><span class="mr-2"><a href="/">Accueil <i class="fa fa-chevron-right"></i></a></span> <span class="mr-2"><a href="/blog">Blog <i class="fa fa-chevron-right"></i></a></span> <span>Blog Single <i class="fa fa-chevron-right"></i></span></p>
        <h1 class="mb-3 bread">Blog Single</h1>
      </div>
    </div>
  </div>
 </section>
 
-<section class="ftco-section">
+<section class="ftco-section py-5">
   <div class="container">
     <div class="row"> 
-      <div class="col-lg-8 ftco-animate">
-        <h2 class="mb-3">It is a long established fact a reader be distracted</h2>
+      <div class="col-lg-8 ftco-animate m-auto">
+        <!-- <h2 class="mb-3">It is a long established fact a reader be distracted</h2> -->
         <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis, eius mollitia suscipit, quisquam doloremque distinctio perferendis et doloribus unde architecto optio laboriosam porro adipisci sapiente officiis nemo accusamus ad praesentium? Esse minima nisi et. Dolore perferendis, enim praesentium omnis, iste doloremque quia officia optio deserunt molestiae voluptates soluta architecto tempora.</p> -->
         <p>
-          <img src="/static/user/images/image_3.jpg" alt="" class="img-fluid">
+          <% if(post.image){ %>
+       <img class="img-fluid rounded" src="<%= post.image %>" alt="">
+
+       <% } else { %>
+       <img class="img-fluid rounded" src="http://placehold.it/750x300" alt="">
+
+       <% } %>
+          <!-- <img src="/static/user/images/image_3.jpg" alt="" class="img-fluid"> -->
         </p>
-        <p>Molestiae cupiditate inventore animi, maxime sapiente optio, illo est nemo veritatis repellat sunt doloribus nesciunt! Minima laborum magni reiciendis qui voluptate quisquam voluptatem soluta illo eum ullam incidunt rem assumenda eveniet eaque sequi deleniti tenetur dolore amet fugit perspiciatis ipsa, odit. Nesciunt dolor minima esse vero ut ea, repudiandae suscipit!</p>
-        <h2 class="mb-3 mt-5">#2. Creative WordPress Themes</h2>
-        <p>Temporibus ad error suscipit exercitationem hic molestiae totam obcaecati rerum, eius aut, in. Exercitationem atque quidem tempora maiores ex architecto voluptatum aut officia doloremque. Error dolore voluptas, omnis molestias odio dignissimos culpa ex earum nisi consequatur quos odit quasi repellat qui officiis reiciendis incidunt hic non? Debitis commodi aut, adipisci.</p>
+        <!-- <p>Molestiae cupiditate inventore animi, maxime sapiente optio, illo est nemo veritatis repellat sunt doloribus nesciunt! Minima laborum magni reiciendis qui voluptate quisquam voluptatem soluta illo eum ullam incidunt rem assumenda eveniet eaque sequi deleniti tenetur dolore amet fugit perspiciatis ipsa, odit. Nesciunt dolor minima esse vero ut ea, repudiandae suscipit!</p> -->
+        <h2 class="mb-3 mt-5"><%= post.title  %></h2>
+        <p ><%-post.content%></p>
         <!-- <p>
           <img src="/static/user/images/image_4.jpg" alt="" class="img-fluid">
         </p> -->
@@ -52,10 +59,35 @@
           </div>
         </div> -->
 
+        <!-- <div class="comment-form-wrap pt-5">
+            <h3 class="mb-5">Laisser Un Commentaire</h3>
+            <form action="#" class="p-5 bg-light">
+              <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email">
+              </div> -->
+              <!-- <div class="form-group">
+                <label for="website">Website</label>
+                <input type="url" class="form-control" id="website">
+              </div> -->
 
-        <div class="pt-5 mt-5">
+              <!-- <div class="form-group">
+                <label for="message">Message</label>
+                <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Envoyer" class="btn py-3 px-4 btn-primary">
+              </div>
+
+            </form>
+          </div>
+        <div class="pt-5 mt-5"> -->
           <!-- <h3 class="mb-5">6 Comments</h3> -->
-          <ul class="comment-list">
+          <!-- <ul class="comment-list">
             <li class="comment">
               <div class="vcard bio">
                 <img src="/static/user/images/person_1.jpg" alt="Image placeholder">
@@ -106,38 +138,13 @@
                 <p><a href="#" class="reply">Reply</a></p>
               </div>
             </li>
-          </ul>
+          </ul> -->
           <!-- END comment-list -->
           
-          <div class="comment-form-wrap pt-5">
-            <h3 class="mb-5">Leave a comment</h3>
-            <form action="#" class="p-5 bg-light">
-              <div class="form-group">
-                <label for="name">Name *</label>
-                <input type="text" class="form-control" id="name">
-              </div>
-              <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" class="form-control" id="email">
-              </div>
-              <div class="form-group">
-                <label for="website">Website</label>
-                <input type="url" class="form-control" id="website">
-              </div>
+          
+        <!-- </div> -->
 
-              <div class="form-group">
-                <label for="message">Message</label>
-                <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
-              </div>
-
-            </form>
-          </div>
-        </div>
-
-      </div> <!-- .col-md-8 -->
+      <!-- </div> .col-md-8 -->
       <!-- <div class="col-lg-4 sidebar ftco-animate">
         <div class="sidebar-box">
           <form action="#" class="search-form">
